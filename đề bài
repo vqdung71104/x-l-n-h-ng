@@ -1,0 +1,46 @@
+Giả sử bạn đang phát triển dịch vụ quản lý sản phẩm cho 1 cửa hàng trực tuyến. Trong phạm vi bài tập này với mỗi sản phẩm chúng ta chỉ quan tâm tới mã sản phẩm, giá bán và số lượng trong kho. Mã sản phẩm có không quá 9 ký tự, giá bán (vnd) và số lượng trong kho là các số nguyên.
+Dịch vụ cần xử lý các yêu cầu sau: Thêm sản phẩm, cập nhật giá bán, xóa sản phẩm, kiểm tra và đặt hàng.
+Dữ liệu đầu vào được cung cấp như sau:
+Đầu tiên là 1 số nguyên n (< 100000) - số lượng sản phẩm, sau đó là n dòng, mỗi dòng chứa thông tin về 1 sản phẩm gồm có Mã sản phẩm, số lượng hiện có trong kho và giá bán hiện tại.
+Sau đó là 1 số nguyên m (< 10000) - số lượng yêu cầu cần xử lý,
+tiếp sau đó là m dòng, mỗi dòng là 1 yêu cầu cần xử lý.
+Trên mỗi dòng là mã yêu cầu và các tham số cần thiết.
+a) Nếu mã yêu cầu là add (thêm sản phẩm) thì các tham số tiếp theo là mã sản phẩm, số lượng. Nếu là sản phẩm mới thì giá bán để là -1 (giá trị không hợp lệ).  Nếu ngược lại thì cập nhật số lượng sản phẩm trong kho. Cuối cùng xuất ra số lượng sản phẩm và giá bán hiện tại của sản phẩm đó.
+b) Nếu mã yêu cầu là update (cập nhật sản phẩm) thì các tham số tiếp theo là mã sản phẩm và giá sản phẩm. Nếu mã sản phẩm không tồn tại thì xuất ra thông báo "San pham khong ton tai". Nếu ngược lại thì xuất ra giá cũ và giá mới của sản phẩm sau khi cập nhật.
+c) Nễu mã yêu cầu là delete (xóa sản phẩm) thì tham số tiếp theo là mã sản phẩm. Nếu mã sản phẩm không tồn tại thì xuất ra thông báo "San pham khong ton tai". Nếu ngược lại thì xóa sản phẩm và đưa ra thông báo "Da xoa san pham". (Trong thực tế có thể hạn chế sử dụng yêu cầu xóa)
+d) Nếu mã yêu cầu là check thì tham số tiếp theo là mã sản phẩm. Nếu tìm thấy mã sản phẩm thì xuất ra số lượng và giá hiện tại của sản phẩm. Nếu ngược lại thì đưa ra thông báo "San pham khong ton tai".
+e) Nếu mã yêu cầu là order (đặt hàng) thì các tham số tiếp theo là mã sản phẩm và số lượng. Nếu mã sản phẩm không tồn tại thì đưa ra thông báo "San pham khong ton tai", nếu ngược lại và số lượng vượt quá số lượng trong kho thì xuất ra thông báo "Khong du so luong", nếu ngược lại và giá đang là 1 giá trị không hợp lệ (< 0) thì đưa ra thông báo "Khong the dat hang san pham chua co gia", nếu ngược lại (có sản phẩm, đủ số lượng và giá hợp lệ) thì cập nhật giảm số lượng sản phẩm trong kho và đưa ra thông báo "Da dat hang", sau đó đưa ra số lượng sản phẩm còn lại trong kho sau khi đã cập nhật và tổng giá trị hàng đã đặt.
+Ví dụ,
+Đầu vào:
+5
+a100 10 100000
+a105 8 120000
+a200 20 150000
+b101 30 300000
+b104 20 350000
+12
+add a105 10
+add a108 30
+update a109 200000
+update a100 115000
+delete a404
+delete a100
+check a100
+check a105
+order a100 10
+order a200 100
+order a108 8
+order b101 8
+Đầu ra:
+18 120000
+30 -1
+San pham khong ton tai
+100000 115000
+San pham khong ton tai
+Da xoa san pham
+San pham khong ton tai
+18 120000
+San pham khong ton tai
+Khong du so luong
+Khong the dat hang san pham chua có gia
+Da dat hang 22 2400000
