@@ -1,0 +1,200 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    string id;
+    int quantity;
+    int price;
+    Node* left;
+    Node* right;
+};
+
+Node* createNode(string id, int quantity, int price) {
+    Node* newNode = new Node;
+    newNode->id = id;
+    newNode->quantity = quantity;
+    newNode->price = price;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+Node* insertNode(Node* root, string id, int quantity, int price) {
+    if (root == NULL) {
+        return createNode(id, quantity, price);
+    }
+    if (id < root->id) {
+        root->left = insertNode(root->left, id, quantity, price);
+    }
+    else if (id > root->id) {
+        root->right = insertNode(root->right, id, quantity, price);
+    }
+    return root;
+}
+
+Node* findNode(Node* root, string id) {
+    if (root == NULL || root->id == id) {
+        return root;
+    }
+    if (id < root->id) {
+        return findNode(root->left, id);
+    }
+    else if (id > root->id) {
+        return findNode(root->right, id);
+    }
+    return NULL;
+}
+
+Node* findMinNode(Node* root) {
+    if (root == NULL) {
+        return NULL;
+    }
+    while (root->left != NULL) {
+        root = root->left;
+    }
+    return root;
+}
+
+Node* deleteNode(Node* root, string id) {
+    if (root == NULL) {
+        return NULL;
+    }
+    if (id < root->id) {
+        root->left = deleteNode(root->left, id);
+    }
+    else if (id > root->id) {
+        root->right = deleteNode(root->right, id);
+    }
+    else {
+        if (root->left == NULL && root->right == NULL) {
+            delete root;
+            root = NULL;
+        }
+        else if (root->left == NULL) {
+            Node* temp = root;
+            root = root->right;
+            delete temp;
+        }
+        else if (root->right == NULL) {
+            Node* temp = root;
+            root = root->left;
+            delete temp;
+        }
+        else {
+            Node* minRight = findMinNode(root->right);
+            root->id = minRight->id;
+            root->quantity = minRight->quantity;
+            root->price = minRight->price;
+            root->right = deleteNode(root->right, minRight->id);
+        }
+    }
+    return root;
+}
+
+void addProduct(Node*& root, string id, int quantity) {
+    Node* node = findNode(root, id);
+    if (node == NULL) {
+        root = insertNode(root, id, quantity, -1);
+        cout << quantity << " -1" << endl;
+    }
+    else {
+        node->quantity += quantity;
+        cout << node->quantity << " " << node->price << endl;
+    }
+}
+
+void updateProduct(Node* root, string id, int price) {
+    Node* node = findNode(root, id);
+    if (node == NULL) {
+        cout << "San pham khong ton tai" << endl;
+    }
+    else {
+        int oldPrice = node->price;
+        node->price = price;
+        cout << oldPrice << " " << node->price << endl;
+    }
+}
+
+void deleteProduct(Node*& root, string id) {
+    Node* node = findNode(root, id);
+    if (node == NULL) {
+        cout << "San pham khong ton tai" << endl;
+    }
+    else {
+        root = deleteNode(root, id);
+        cout << "Da xoa san pham" << endl;
+    }
+}
+
+void checkProduct(Node* root, string id) {
+    Node* node = findNode(root, id);
+    if (node == NULL) {
+        cout << "San pham khong ton tai" << endl;
+    }
+    else {
+        cout << node->quantity << " " << node->price << endl;
+    }
+}
+
+void orderProduct(Node*& root, string id, int quantity) {
+    Node* node = findNode(root, id);
+    if (node == NULL) {
+        cout << "San pham khong ton tai" << endl;
+    }
+    else if (quantity > node->quantity) {
+        cout << "Khong du so luong" << endl;
+    }
+    else if (node->price == -1) {
+        cout << "Khong the dat hang san pham chua co gia" << endl;
+    }
+    else {
+        node->quantity -= quantity;
+        int totalValue = quantity * node->price;
+        cout << "Da dat hang " << node->quantity << " " << totalValue << endl;
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    Node* root = NULL;
+    for (int i = 0; i < n; i++) {
+        string id;
+        int quantity, price;
+        cin >> id >> quantity >> price;
+        root = insertNode(root, id, quantity, price);
+    }
+
+    int m;
+    cin >> m;
+    for (int i = 0; i < m; i++) {
+        string command, id;
+        int quantity, price;
+        cin >> command;
+        if (command == "add") {
+            cin >> id >> quantity;
+            addProduct(root, id, quantity);
+        }
+        else if (command == "update") {
+            cin >> id >> price;
+            updateProduct(root, id, price);
+        }
+        else if (command == "delete") {
+            cin >> id;
+            deleteProduct(root, id);
+        }
+        else if (command == "check") {
+            cin >> id;
+            checkProduct(root, id);
+        }
+        else if (command == "order") {
+            cin >> id >> quantity;
+            orderProduct(root, id, quantity);
+        }
+    }
+
+    return 0;
+}
+
